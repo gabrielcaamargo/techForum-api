@@ -1,0 +1,10 @@
+{
+  "name": "techForum-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "gabrielcaamargo",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}
