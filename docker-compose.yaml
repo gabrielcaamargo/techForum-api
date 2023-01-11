@@ -1,0 +1,35 @@
+version: '2.12.2'
+
+services:
+  postgres:
+    image: postgres
+    container_name: techForumPg
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    networks:
+      - postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: techForum-pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "gcamargo.dev@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "pgadmin2022"
+    ports:
+      - 16543:80
+    depends_on:
+      - postgres
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
