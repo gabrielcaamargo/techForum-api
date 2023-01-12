@@ -24,8 +24,26 @@ class UserController {
     response.json(user);
   }
 
-  store() {
+  async store(request: Request, response: Response) {
     // Create a register
+    const { username, followers, instagram } = request.body;
+
+    const userExists = await UserRepository.findByUsername(username);
+    const userInstagramExists = await UserRepository.findByInstagram(instagram);
+
+    if(userExists) {
+      return response.status(400).json({ error: 'This username has already been taken'});
+    }
+
+    if(userInstagramExists) {
+      return response.status(400).json({ error: 'This instagram account has already been registered'});
+    }
+
+    const user = await UserRepository.create({
+      username, followers, instagram
+    });
+
+    response.json(user);
   }
 
   update() {

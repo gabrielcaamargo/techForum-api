@@ -3,12 +3,17 @@ import { v4 } from 'uuid';
 let users = [
   {
     id: v4(),
-    name: 'Gabriel',
+    username: 'gabcamargo',
     followers: 24,
     instagram: 'gabcamargo',
-    category_id: v4(),
   },
 ];
+
+interface createParameters {
+  username: string;
+  followers: number;
+  instagram: string
+}
 
 class UserRepository {
   findAll() {
@@ -21,12 +26,39 @@ class UserRepository {
     ));
   }
 
+  findByUsername(username: string) {
+    return new Promise((resolve) => resolve(
+      users.find(user => user.username === username)
+    ));
+  }
+
+  findByInstagram(instagram: string) {
+    return new Promise((resolve) => resolve(
+      users.find(user => user.instagram === instagram)
+    ));
+  }
+
+  create({username, followers, instagram}: createParameters) {
+    return new Promise<createParameters>((resolve) => {
+      const newUser = {
+        id: v4(),
+        username,
+        followers,
+        instagram
+      };
+
+      users.push(newUser);
+      resolve(newUser);
+    });
+  }
+
   delete(id: string) {
     return new Promise<void>((resolve) => {
       users = users.filter(user => user.id !== id);
       resolve();
     });
   }
+
 }
 
 export default new UserRepository();
