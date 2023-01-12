@@ -10,7 +10,7 @@ const client = new Client({
 
 client.connect();
 
-export default async (query: string) => {
-  const { rows } = await client.query(query);
+export async function query (query: string, values: any) {
+  const { rows } = await client.query(query, values);
   return rows;
-};
+}

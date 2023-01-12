@@ -1,5 +1,7 @@
 import { v4 } from 'uuid';
 
+import { query } from '../database';
+
 let users = [
   {
     id: v4(),
@@ -38,18 +40,14 @@ class UserRepository {
     ));
   }
 
-  create({username, followers, instagram}: createParameters) {
-    return new Promise<createParameters>((resolve) => {
-      const newUser = {
-        id: v4(),
-        username,
-        followers,
-        instagram
-      };
+  async create({username, followers, instagram}: createParameters) {
+    const [row] = await query(`
+      INSERT INTO users(username, followers, instagram)
+      VALUES($1, $2, $3)
+      RETURNING *
+    `, [username, followers, instagram]);
 
-      users.push(newUser);
-      resolve(newUser);
-    });
+    return row;
   }
 
   update(id: string, {username, followers, instagram}: createParameters) {
