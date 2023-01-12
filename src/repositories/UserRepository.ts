@@ -52,6 +52,24 @@ class UserRepository {
     });
   }
 
+  update(id: string, {username, followers, instagram}: createParameters) {
+    return new Promise<createParameters>((resolve) => {
+      const updatedUser = {
+        id,
+        username,
+        followers,
+        instagram
+      };
+
+      users = users.map(user => (
+        user.id === id ? updatedUser : user
+      ));
+
+      resolve(updatedUser);
+    });
+
+  }
+
   delete(id: string) {
     return new Promise<void>((resolve) => {
       users = users.filter(user => user.id !== id);

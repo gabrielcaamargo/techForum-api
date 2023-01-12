@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
 import UserRepository from '../repositories/UserRepository';
-
 class UserController {
   async index(request: Request, response: Response) {
     // List all registers
@@ -31,6 +30,10 @@ class UserController {
     const userExists = await UserRepository.findByUsername(username);
     const userInstagramExists = await UserRepository.findByInstagram(instagram);
 
+    if(!username) {
+      return response.status(400).json({ error: 'Userame is required'});
+    }
+
     if(userExists) {
       return response.status(400).json({ error: 'This username has already been taken'});
     }
@@ -46,8 +49,40 @@ class UserController {
     response.json(user);
   }
 
-  update() {
+  async update(request: Request, response: Response) {
     // Update a register
+    const { id } = request.params;
+    const { username, followers, instagram } = request.body;
+
+    const userExists: any = await UserRepository.findById(id);
+    const userByUsername: any = await UserRepository.findByUsername(username);
+    const userInstagramExists: any = await UserRepository.findByInstagram(instagram);
+
+    if(!userExists) {
+      return response.status(404).json({ error: 'User not found'});
+    }
+
+    if(!username) {
+      return response.status(400).json({ error: 'Userame is required'});
+    }
+
+    if(!userInstagramExists) {
+      return response.status(400).json({ error: 'Instagram is required'});
+    }
+
+    if(userByUsername && userExists.id !== id) {
+      return response.status(400).json({ error: 'This username has already been taken'});
+    }
+
+    if(userInstagramExists && userExists.id !== id) {
+      return response.status(400).json({ error: 'This instagram account has already been registered'});
+    }
+
+    const user = await UserRepository.update(id, {
+      username, followers, instagram
+    });
+
+    response.json(user);
   }
 
   async delete(request: Request, response: Response) {
