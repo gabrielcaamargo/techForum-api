@@ -32,8 +32,16 @@ class UserController {
     // Update a register
   }
 
-  delete() {
-    // Delete one register
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    const user = await UserRepository.findById(id);
+
+    if (!user) {
+      return response.status(404).json({ error: 'User not found'});
+    }
+
+    await UserRepository.delete(id);
+    response.sendStatus(204);
   }
 }
 

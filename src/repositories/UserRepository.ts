@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-const users = [
+let users = [
   {
     id: v4(),
     name: 'Gabriel',
@@ -19,6 +19,13 @@ class UserRepository {
     return new Promise((resolve) => resolve(
       users.find(user => user.id === id)
     ));
+  }
+
+  delete(id: string) {
+    return new Promise<void>((resolve) => {
+      users = users.filter(user => user.id !== id);
+      resolve();
+    });
   }
 }
 
