@@ -5,7 +5,7 @@ let users = [
     id: v4(),
     username: 'gabcamargo',
     followers: 24,
-    instagram: 'gabcamargo',
+    instagram: 'gabcamargo'
   },
 ];
 
