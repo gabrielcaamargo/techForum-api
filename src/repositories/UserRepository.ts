@@ -14,6 +14,12 @@ class UserRepository {
   findAll() {
     return new Promise(resolve => resolve(users));
   }
+
+  findById(id: string) {
+    return new Promise((resolve) => resolve(
+      users.find(user => user.id === id)
+    ));
+  }
 }
 
 export default new UserRepository();
