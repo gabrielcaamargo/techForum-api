@@ -1,3 +1,4 @@
+import { ParsedQs } from 'qs';
 import { v4 } from 'uuid';
 
 import { query } from '../database';
@@ -18,26 +19,25 @@ interface createParameters {
 }
 
 class UserRepository {
-  findAll() {
-    return new Promise(resolve => resolve(users));
+  async findAll(orderBy: any  = 'ASC') {
+    const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const rows = await query(`SELECT * FROM users ORDER BY username ${direction}`);
+    return rows;
   }
 
-  findById(id: string) {
-    return new Promise((resolve) => resolve(
-      users.find(user => user.id === id)
-    ));
+  async findById(id: string) {
+    const [row] = await query('SELECT * FROM USERS WHERE id = $1', [id]);
+    return row;
   }
 
-  findByUsername(username: string) {
-    return new Promise((resolve) => resolve(
-      users.find(user => user.username === username)
-    ));
+  async findByUsername(username: string) {
+    const [row] = await query('SELECT * FROM USERS WHERE username = $1', [username]);
+    return row;
   }
 
-  findByInstagram(instagram: string) {
-    return new Promise((resolve) => resolve(
-      users.find(user => user.instagram === instagram)
-    ));
+  async findByInstagram(instagram: string) {
+    const [row] = await query('SELECT * FROM USERS WHERE instagram = $1', [instagram]);
+    return row;
   }
 
   async create({username, followers, instagram}: createParameters) {
