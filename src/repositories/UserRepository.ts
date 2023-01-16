@@ -1,16 +1,4 @@
-import { v4 } from 'uuid';
-
 import { query } from '../database';
-
-let users = [
-  {
-    id: v4(),
-    username: 'gabcamargo',
-    followers: 24,
-    instagram: 'gabcamargo'
-  },
-];
-
 interface createParameters {
   username: string;
   followers: number;
@@ -52,11 +40,9 @@ class UserRepository {
     return row;
   }
 
-  delete(id: string) {
-    return new Promise<void>((resolve) => {
-      users = users.filter(user => user.id !== id);
-      resolve();
-    });
+  async delete(id: string) {
+    const deleteOp = await query('DELETE FROM users WHERE id = $1', [id]);
+    return deleteOp;
   }
 
 }
