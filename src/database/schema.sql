@@ -5,7 +5,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS users (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
   username VARCHAR NOT NULL UNIQUE,
-  instagram VARCHAR NOT NULL UNIQUE,
   followers INTEGER NOT NULL
 );
 

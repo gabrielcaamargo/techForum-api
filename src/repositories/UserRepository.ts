@@ -1,4 +1,3 @@
-import { ParsedQs } from 'qs';
 import { v4 } from 'uuid';
 
 import { query } from '../database';
@@ -15,7 +14,6 @@ let users = [
 interface createParameters {
   username: string;
   followers: number;
-  instagram: string
 }
 
 class UserRepository {
@@ -26,46 +24,32 @@ class UserRepository {
   }
 
   async findById(id: string) {
-    const [row] = await query('SELECT * FROM USERS WHERE id = $1', [id]);
+    const [row] = await query('SELECT * FROM users WHERE id = $1', [id]);
     return row;
   }
 
   async findByUsername(username: string) {
-    const [row] = await query('SELECT * FROM USERS WHERE username = $1', [username]);
+    const [row] = await query('SELECT * FROM users WHERE username = $1', [username]);
     return row;
   }
 
-  async findByInstagram(instagram: string) {
-    const [row] = await query('SELECT * FROM USERS WHERE instagram = $1', [instagram]);
-    return row;
-  }
-
-  async create({username, followers, instagram}: createParameters) {
+  async create({username, followers}: createParameters) {
     const [row] = await query(`
-      INSERT INTO users(username, followers, instagram)
-      VALUES($1, $2, $3)
+      INSERT INTO users(username, followers)
+      VALUES($1, $2)
       RETURNING *
-    `, [username, followers, instagram]);
+    `, [username, followers]);
 
     return row;
   }
 
-  update(id: string, {username, followers, instagram}: createParameters) {
-    return new Promise<createParameters>((resolve) => {
-      const updatedUser = {
-        id,
-        username,
-        followers,
-        instagram
-      };
-
-      users = users.map(user => (
-        user.id === id ? updatedUser : user
-      ));
-
-      resolve(updatedUser);
-    });
-
+  async update(id: string, {username, followers}: createParameters) {
+    const [row] = await query(`
+      UPDATE users
+      SET username = $1, followers = $2
+      WHERE id = $3
+    `, [username, followers, id]);
+    return row;
   }
 
   delete(id: string) {
